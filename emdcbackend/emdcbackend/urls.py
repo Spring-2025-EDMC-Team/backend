@@ -24,6 +24,8 @@ from .views.admin import create_admin, admins_get_all, admin_by_id, delete_admin
 from .views.Maps.MapUserToRole import create_user_role_mapping, delete_user_role_mapping, get_user_by_role
 from .views.Maps.MapClusterToJudge import create_cluster_judge_mapping, delete_cluster_judge_mapping_by_id, cluster_by_judge_id, judges_by_cluster_id
 from .views.tabulation import tabulate_scores
+from .views.email_verification import EmailVerificationView
+from .views.password_validation import validate_password
 
 urlpatterns = [
     # Admins
@@ -38,6 +40,9 @@ urlpatterns = [
     path('api/signup/', views.signup, name='signup'),
     path('api/testToken/', views.test_token, name='test_token'),
 
+    # email verifcation
+
+    path('api/verify-email/<str:uidb64>/<str:token>/', EmailVerificationView.as_view(), name='email-verification'),
     # Users
     path('api/user/get/<int:user_id>/', views.user_by_id, name='user_by_id'),
     path('api/user/edit/', views.edit_user, name='edit_user'),

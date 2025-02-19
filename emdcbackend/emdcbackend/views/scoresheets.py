@@ -65,6 +65,7 @@ def edit_score_sheet(request):
             scores.field17 = request.data["field17"]
     scores.save()
     serializer = ScoresheetSerializer(instance=scores)
+    print(serializer)
     return Response({"edit_score_sheets": serializer.data})
 
 @api_view(["POST"])
