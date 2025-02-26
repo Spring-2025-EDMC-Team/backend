@@ -180,5 +180,25 @@ class MapScoresheetToTeamJudge(models.Model):
 class SpecialAward(models.Model):
     teamid = models.IntegerField()
     award_name = models.CharField(max_length=255)
+    isJudge = models.BooleanField(default=False)
+
+class Ballot(models.Model):
+    contestid = models.IntegerField()
+    isSubmitted = models.BooleanField(default=False)
+
+class Votes(models.Model):
+    votedteamid = models.IntegerField()
+
+class MapBallotToVote(models.Model):
+    ballotid = models.IntegerField()
+    voteid = models.IntegerField()
+
+class MapVoteToAward(models.Model):
+    awardid = models.IntegerField()
+    voteid = models.IntegerField()
+
+class MapTeamToVote(models.Model):
+    teamid = models.IntegerField()
+    voteid = models.IntegerField()
 
     
