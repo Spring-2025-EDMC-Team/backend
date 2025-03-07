@@ -346,6 +346,7 @@ def is_team_disqualified(request):
     team = get_object_or_404(Teams, id=request.data["teamid"])
     return Response({"is disqualified": team.organizer_disqualified}, status=status.HTTP_200_OK)
 
+# GET request that returns all teams
 @api_view(["GET"])
 @authentication_classes([SessionAuthentication, TokenAuthentication])
 @permission_classes([IsAuthenticated])

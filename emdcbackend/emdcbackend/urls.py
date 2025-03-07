@@ -24,7 +24,7 @@ from .views.admin import create_admin, admins_get_all, admin_by_id, delete_admin
 from .views.Maps.MapUserToRole import create_user_role_mapping, delete_user_role_mapping, get_user_by_role
 from .views.Maps.MapClusterToJudge import create_cluster_judge_mapping, delete_cluster_judge_mapping_by_id, cluster_by_judge_id, judges_by_cluster_id
 from .views.tabulation import tabulate_scores
-from .views.Maps.MapAwardToTeam import create_award_team_mapping, get_award_id_by_team_id, delete_award_team_mapping_by_id, update_award_team_mapping
+from .views.Maps.MapAwardToTeam import create_award_team_mapping, get_award_id_by_team_id, delete_award_team_mapping_by_id, update_award_team_mapping, get_all_awards
 
 urlpatterns = [
     # Admins
@@ -159,6 +159,7 @@ urlpatterns = [
     path('api/tabulation/tabulateScores/',tabulate_scores, name='tabulate_scores'),
 
     # Special Awards
+    path('api/mapping/awardToTeam/getAllAwards/', get_all_awards, name='get_all_awards'),
     path('api/mapping/awardToTeam/create/', create_award_team_mapping, name='create_award_team_mapping'),
     path('api/mapping/awardToTeam/getAwardByTeam/<int:team_id>/', get_award_id_by_team_id, name='get_award_id_by_team_id'),
     path('api/mapping/awardToTeam/delete/<int:team_id>/<str:award_name>/', delete_award_team_mapping_by_id, name='delete_award_team_mapping_by_id'),
