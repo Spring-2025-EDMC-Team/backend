@@ -27,7 +27,7 @@ from .views.tabulation import tabulate_scores
 from .views.Maps.MapAwardToTeam import create_award_team_mapping, get_award_id_by_team_id, delete_award_team_mapping_by_id, update_award_team_mapping, get_all_awards
 from .views.Maps.MapBallotToVote import create_map_ballot_to_vote
 from .views.Maps.MapTeamToVote import create_map_team_to_vote
-from .views.Maps.MapVoteToAward import create_map_vote_to_award
+from .views.Maps.MapVoteToAward import create_map_vote_to_award, create_map_award_to_contest
 from .views.votes import create_vote, get_all_votes
 from .views.ballot import create_ballot, get_all_ballots, delete_ballot
 
@@ -182,5 +182,6 @@ urlpatterns = [
     # Mapping ballot/vote/award
     path('api/map/ballotToVote/create/', create_map_ballot_to_vote, name='create_map_ballot_to_vote'),
     path('api/map/voteToAward/create/', create_map_vote_to_award, name='create_map_vote_to_award'),
-    path('api/map/teamToVote/create/', create_map_team_to_vote, name='create_map_team_to_vote')    
+    path('api/map/teamToVote/create/', create_map_team_to_vote, name='create_map_team_to_vote'),
+    path('api/map/awardToContest/create/', create_map_award_to_contest, name='create_map_award_to_contest')      
 ]

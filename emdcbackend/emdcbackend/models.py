@@ -201,4 +201,8 @@ class MapTeamToVote(models.Model):
     teamid = models.IntegerField()
     voteid = models.IntegerField()
 
+class MapAwardToContest(models.Model):
+    contestid = models.IntegerField()
+    awardid = models.IntegerField()
+
     
