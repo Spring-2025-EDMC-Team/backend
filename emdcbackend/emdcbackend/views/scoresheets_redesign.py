@@ -13,15 +13,6 @@ from .Maps.MapScoreSheet import delete_score_sheet_mapping
 from ..models import Scoresheet, Teams, Judge, MapClusterToTeam, MapScoresheetToTeamJudge, MapJudgeToCluster, ScoresheetEnum, Contest, MapContestToTeam
 from ..serializers import ScoresheetSerializer, MapScoreSheetToTeamJudgeSerializer
 
-# Assuming ScoresheetEnum is defined in models.py as:
-# class ScoresheetEnum:
-#     PRESENTATION = 1
-#     JOURNAL = 2
-#     MACHINEDESIGN = 3
-#     RUNPENALTIES = 4
-#     OTHERPENALTIES = 5
-#     REDESIGN = 6
-
 @api_view(["GET"])
 def scores_by_id(request, scores_id):
     scores = get_object_or_404(Scoresheet, id=scores_id)
