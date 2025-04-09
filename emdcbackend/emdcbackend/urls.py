@@ -24,7 +24,7 @@ from .views.admin import create_admin, admins_get_all, admin_by_id, delete_admin
 from .views.Maps.MapUserToRole import create_user_role_mapping, delete_user_role_mapping, get_user_by_role
 from .views.Maps.MapClusterToJudge import create_cluster_judge_mapping, delete_cluster_judge_mapping_by_id, cluster_by_judge_id, judges_by_cluster_id
 from .views.tabulation import tabulate_scores
-from .views.Maps.MapAwardToTeam import create_award_team_mapping, get_award_id_by_team_id, delete_award_team_mapping_by_id, update_award_team_mapping, get_all_awards
+from .views.Maps.MapAwardToTeam import create_award_team_mapping, get_award_id_by_team_id, delete_award_team_mapping_by_id, update_award_team_mapping, get_all_awards, get_awards_by_role
 from .views.Maps.MapBallotToVote import create_map_ballot_to_vote
 from .views.Maps.MapTeamToVote import create_map_team_to_vote
 from .views.Maps.MapVoteToAward import create_map_vote_to_award, create_map_award_to_contest
@@ -169,6 +169,8 @@ urlpatterns = [
     path('api/mapping/awardToTeam/getAwardByTeam/<int:team_id>/', get_award_id_by_team_id, name='get_award_id_by_team_id'),
     path('api/mapping/awardToTeam/delete/<int:team_id>/<str:award_name>/', delete_award_team_mapping_by_id, name='delete_award_team_mapping_by_id'),
     path('api/mapping/awardToTeam/update/<int:team_id>/<str:award_name>/', update_award_team_mapping, name='update_award_team_mapping'),
+
+    path('api/mapping/awardToTeam/getAwardByRole/<str:isJudge>/', get_awards_by_role, name='get_awards_by_role'),
 
     # Ballots
     path('api/ballot/create/', create_ballot, name='create_ballot'),
