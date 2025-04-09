@@ -14,7 +14,7 @@ from ..models import Scoresheet, Teams, Judge, MapClusterToTeam, MapScoresheetTo
 from ..serializers import ScoresheetSerializer, MapScoreSheetToTeamJudgeSerializer
 
 @api_view(["GET"])
-def scores_by_id(request, scores_id):
+def scores_by_id_redesign(request, scores_id):
     scores = get_object_or_404(Scoresheet, id=scores_id)
     serializer = ScoresheetSerializer(instance=scores)
     return Response({"ScoreSheet": serializer.data}, status=status.HTTP_200_OK)
@@ -22,7 +22,7 @@ def scores_by_id(request, scores_id):
 @api_view(["POST"])
 @authentication_classes([SessionAuthentication, TokenAuthentication])
 @permission_classes([IsAuthenticated])
-def create_score_sheet(request):
+def create_score_sheet_redesign(request):
     map_data = request.data
     result = create_score_sheet_helper(map_data)
     if "errors" in result:
@@ -32,7 +32,7 @@ def create_score_sheet(request):
 @api_view(["POST"])
 @authentication_classes([SessionAuthentication, TokenAuthentication])
 @permission_classes([IsAuthenticated])
-def edit_score_sheet(request):
+def edit_score_sheet_redesign(request):
     scores = get_object_or_404(Scoresheet, id=request.data["id"])
     scores.sheetType = request.data["sheetType"]
     scores.isSubmitted = request.data["isSubmitted"]
@@ -45,7 +45,7 @@ def edit_score_sheet(request):
         scores.field5 = request.data.get("learning_identification", 0.0)
         scores.field6 = request.data.get("teamwork", 0.0)
         scores.field7 = request.data.get("communication", 0.0)
-        scores.field8 = request.data.get("division", "junior")  # Default to junior
+        scores.field8 = request.data.get("division", "junior") 
         scores.field9 = request.data.get("comments", "")
     elif scores.sheetType == ScoresheetEnum.OTHERPENALTIES:
         scores.field1 = request.data["field1"]
@@ -82,7 +82,7 @@ def edit_score_sheet(request):
 @api_view(["POST"])
 @authentication_classes([SessionAuthentication, TokenAuthentication])
 @permission_classes([IsAuthenticated])
-def update_scores(request):
+def update_scores_redesign(request):
     scores = get_object_or_404(Scoresheet, id=request.data["id"])
     
     if scores.sheetType == ScoresheetEnum.REDESIGN:
@@ -130,7 +130,7 @@ def update_scores(request):
 @api_view(["POST"])
 @authentication_classes([SessionAuthentication, TokenAuthentication])
 @permission_classes([IsAuthenticated])
-def edit_score_sheet_field(request):
+def edit_score_sheet_field_redesign(request):
     sheet = get_object_or_404(Scoresheet, id=request.data["id"])
     
     field_name = ""
@@ -150,12 +150,12 @@ def edit_score_sheet_field(request):
 @api_view(["DELETE"])
 @authentication_classes([SessionAuthentication, TokenAuthentication])
 @permission_classes([IsAuthenticated])
-def delete_score_sheet(request, scores_id):
+def delete_score_sheet_redesign(request, scores_id):
     scores = get_object_or_404(Scoresheet, id=scores_id)
     scores.delete()
     return Response({"detail": "Score Sheet deleted successfully."}, status=status.HTTP_200_OK)
 
-def create_score_sheet_helper(map_data):
+def create_score_sheet_helper_redesign(map_data):
     serializer = ScoresheetSerializer(data=map_data)
     if serializer.is_valid():
         serializer.save()
@@ -163,7 +163,7 @@ def create_score_sheet_helper(map_data):
     else:
         return {"errors": serializer.errors}
 
-def create_base_score_sheet(sheet_type):
+def create_base_score_sheet_redesign(sheet_type):
     base_score_data = {
         "sheetType": sheet_type,
         "isSubmitted": False,
@@ -184,7 +184,7 @@ def create_base_score_sheet(sheet_type):
     else:
         raise ValidationError(serializer.errors)
 
-def create_base_score_sheet_runpenalties():
+def create_base_score_sheet_runpenalties_redesign():
     base_score_data = {
         "sheetType": ScoresheetEnum.RUNPENALTIES,
         "isSubmitted": False,
@@ -213,7 +213,7 @@ def create_base_score_sheet_runpenalties():
     else:
         raise ValidationError(serializer.errors)
 
-def create_base_score_sheet_otherpenalties():
+def create_base_score_sheet_otherpenalties_redesign():
     base_score_data = {
         "sheetType": ScoresheetEnum.OTHERPENALTIES,
         "isSubmitted": False,
@@ -254,7 +254,7 @@ def create_base_score_sheet_redesign(division="junior"):
     else:
         raise ValidationError(serializer.errors)
 
-def create_sheets_for_teams_in_cluster(judge_id, cluster_id, presentation, journal, mdo, runpenalties, otherpenalties, redesign=False, division="junior"):
+def create_sheets_for_teams_in_cluster_redesign(judge_id, cluster_id, presentation, journal, mdo, runpenalties, otherpenalties, redesign=False, division="junior"):
     try:
         mappings = MapClusterToTeam.objects.filter(clusterid=cluster_id)
         if not mappings.exists():
@@ -324,7 +324,7 @@ def create_sheets_for_teams_in_cluster(judge_id, cluster_id, presentation, journ
     except Exception as e:
         raise ValidationError({"detail": str(e)})
 
-def create_score_sheets_for_team(team, judges):
+def create_score_sheets_for_team_redesign(team, judges):
     created_score_sheets = []
     for judge in judges:
         if judge.presentation:
@@ -353,7 +353,7 @@ def create_score_sheets_for_team(team, judges):
             created_score_sheets.append(score_sheet)
     return created_score_sheets
 
-def get_scoresheet_id(judge_id, team_id, scoresheet_type):
+def get_scoresheet_id_redesign(judge_id, team_id, scoresheet_type):
     try:
         mapping = MapScoresheetToTeamJudge.objects.get(judgeid=judge_id, teamid=team_id, sheetType=scoresheet_type)
         scoresheet = Scoresheet.objects.get(id=mapping.scoresheetid)
@@ -361,7 +361,7 @@ def get_scoresheet_id(judge_id, team_id, scoresheet_type):
     except (MapScoresheetToTeamJudge.DoesNotExist, Scoresheet.DoesNotExist):
         raise ValidationError({"error": "No scoresheet found"})
 
-def delete_sheets_for_teams_in_cluster(judge_id, cluster_id, presentation, journal, mdo, runpenalties, otherpenalties, redesign=False):
+def delete_sheets_for_teams_in_cluster_redesign(judge_id, cluster_id, presentation, journal, mdo, runpenalties, otherpenalties, redesign=False):
     try:
         mappings = MapClusterToTeam.objects.filter(clusterid=cluster_id)
         if not mappings.exists():
@@ -410,7 +410,7 @@ def delete_sheets_for_teams_in_cluster(judge_id, cluster_id, presentation, journ
     except Exception as e:
         raise ValidationError({"detail": str(e)})
 
-def make_sheets_for_team(teamid, clusterid):
+def make_sheets_for_team_redesign(teamid, clusterid):
     created_score_sheets = []
     judges = MapJudgeToCluster.objects.filter(clusterid=clusterid)
     for judge_map in judges:
@@ -474,7 +474,7 @@ def make_sheets_for_team(teamid, clusterid):
 @api_view(["GET"])
 @authentication_classes([SessionAuthentication, TokenAuthentication])
 @permission_classes([IsAuthenticated])
-def get_scoresheet_details_by_team(request, team_id):
+def get_scoresheet_details_by_team_redesign(request, team_id):
     scoresheet_mappings = MapScoresheetToTeamJudge.objects.filter(teamid=team_id)
     scoresheets = Scoresheet.objects.filter(id__in=scoresheet_mappings.values_list('scoresheetid', flat=True))
     
@@ -613,15 +613,15 @@ def get_scoresheet_details_by_team(request, team_id):
         "7": other_penalties_scoresheet_details[6],
     }
     redesign_scoresheet_response = {
-        "innovation_creativity": redesign_scoresheet_details[0],
-        "use_of_item": redesign_scoresheet_details[1],
-        "explanation_solution": redesign_scoresheet_details[2],
-        "engineering_principles": redesign_scoresheet_details[3],
-        "learning_identification": redesign_scoresheet_details[4],
-        "teamwork": redesign_scoresheet_details[5],
-        "communication": redesign_scoresheet_details[6],
-        "division": redesign_scoresheet_details[7],
-        "comments": redesign_scoresheet_details[8],
+        "1": redesign_scoresheet_details[0],
+        "2": redesign_scoresheet_details[1],
+        "3": redesign_scoresheet_details[2],
+        "4": redesign_scoresheet_details[3],
+        "5": redesign_scoresheet_details[4],
+        "6": redesign_scoresheet_details[5],
+        "7": redesign_scoresheet_details[6],
+        "8": redesign_scoresheet_details[7],
+        "9": redesign_scoresheet_details[8],
     }
     
     return Response({
@@ -636,7 +636,7 @@ def get_scoresheet_details_by_team(request, team_id):
 @api_view(["GET"])
 @authentication_classes([SessionAuthentication, TokenAuthentication])
 @permission_classes([IsAuthenticated])
-def get_scoresheet_details_for_contest(request):
+def get_scoresheet_details_for_contest_redesign(request):
     contest = get_object_or_404(Contest, id=request.data["contestid"])
     team_mappings = MapContestToTeam.objects.filter(contestid=contest.id)
     team_responses = {}
@@ -781,15 +781,15 @@ def get_scoresheet_details_for_contest(request):
             "7": other_penalties_scoresheet_details[6],
         }
         redesign_scoresheet_response = {
-            "innovation_creativity": redesign_scoresheet_details[0],
-            "use_of_item": redesign_scoresheet_details[1],
-            "explanation_solution": redesign_scoresheet_details[2],
-            "engineering_principles": redesign_scoresheet_details[3],
-            "learning_identification": redesign_scoresheet_details[4],
-            "teamwork": redesign_scoresheet_details[5],
-            "communication": redesign_scoresheet_details[6],
-            "division": redesign_scoresheet_details[7],
-            "comments": redesign_scoresheet_details[8],
+            "1": redesign_scoresheet_details[0],
+            "2": redesign_scoresheet_details[1],
+            "3": redesign_scoresheet_details[2],
+            "4": redesign_scoresheet_details[3],
+            "5": redesign_scoresheet_details[4],
+            "6": redesign_scoresheet_details[5],
+            "7": redesign_scoresheet_details[6],
+            "8": redesign_scoresheet_details[7],
+            "9": redesign_scoresheet_details[8],
         }
         
         team_responses[team.id] = {
