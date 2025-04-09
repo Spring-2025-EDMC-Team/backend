@@ -266,7 +266,7 @@ def create_sheets_for_teams_in_cluster_redesign(judge_id, cluster_id, presentati
         
         for team in teams_in_cluster:
             if presentation:
-                sheet = create_base_score_sheet(ScoresheetEnum.PRESENTATION)
+                sheet = create_base_score_sheet_redesign(ScoresheetEnum.PRESENTATION)
                 map_data = {"teamid": team.id, "judgeid": judge_id, "scoresheetid": sheet.id, "sheetType": ScoresheetEnum.PRESENTATION}
                 map_serializer = MapScoreSheetToTeamJudgeSerializer(data=map_data)
                 if map_serializer.is_valid():
@@ -275,7 +275,7 @@ def create_sheets_for_teams_in_cluster_redesign(judge_id, cluster_id, presentati
                 else:
                     raise ValidationError(map_serializer.errors)
             if journal:
-                sheet = create_base_score_sheet(ScoresheetEnum.JOURNAL)
+                sheet = create_base_score_sheet_redesign(ScoresheetEnum.JOURNAL)
                 map_data = {"teamid": team.id, "judgeid": judge_id, "scoresheetid": sheet.id, "sheetType": ScoresheetEnum.JOURNAL}
                 map_serializer = MapScoreSheetToTeamJudgeSerializer(data=map_data)
                 if map_serializer.is_valid():
@@ -284,7 +284,7 @@ def create_sheets_for_teams_in_cluster_redesign(judge_id, cluster_id, presentati
                 else:
                     raise ValidationError(map_serializer.errors)
             if mdo:
-                sheet = create_base_score_sheet(ScoresheetEnum.MACHINEDESIGN)
+                sheet = create_base_score_sheet_redesign(ScoresheetEnum.MACHINEDESIGN)
                 map_data = {"teamid": team.id, "judgeid": judge_id, "scoresheetid": sheet.id, "sheetType": ScoresheetEnum.MACHINEDESIGN}
                 map_serializer = MapScoreSheetToTeamJudgeSerializer(data=map_data)
                 if map_serializer.is_valid():
@@ -293,7 +293,7 @@ def create_sheets_for_teams_in_cluster_redesign(judge_id, cluster_id, presentati
                 else:
                     raise ValidationError(map_serializer.errors)
             if runpenalties:
-                sheet = create_base_score_sheet_runpenalties()
+                sheet = create_base_score_sheet_runpenalties_redesign()
                 map_data = {"teamid": team.id, "judgeid": judge_id, "scoresheetid": sheet.id, "sheetType": ScoresheetEnum.RUNPENALTIES}
                 map_serializer = MapScoreSheetToTeamJudgeSerializer(data=map_data)
                 if map_serializer.is_valid():
@@ -302,7 +302,7 @@ def create_sheets_for_teams_in_cluster_redesign(judge_id, cluster_id, presentati
                 else:
                     raise ValidationError(map_serializer.errors)
             if otherpenalties:
-                sheet = create_base_score_sheet_otherpenalties()
+                sheet = create_base_score_sheet_otherpenalties_redesign()
                 map_data = {"teamid": team.id, "judgeid": judge_id, "scoresheetid": sheet.id, "sheetType": ScoresheetEnum.OTHERPENALTIES}
                 map_serializer = MapScoreSheetToTeamJudgeSerializer(data=map_data)
                 if map_serializer.is_valid():
@@ -328,23 +328,23 @@ def create_score_sheets_for_team_redesign(team, judges):
     created_score_sheets = []
     for judge in judges:
         if judge.presentation:
-            score_sheet = create_base_score_sheet(ScoresheetEnum.PRESENTATION)
+            score_sheet = create_base_score_sheet_redesign(ScoresheetEnum.PRESENTATION)
             MapScoresheetToTeamJudge.objects.create(teamid=team.id, judgeid=judge.id, scoresheetid=score_sheet.id, sheetType=ScoresheetEnum.PRESENTATION)
             created_score_sheets.append(score_sheet)
         if judge.journal:
-            score_sheet = create_base_score_sheet(ScoresheetEnum.JOURNAL)
+            score_sheet = create_base_score_sheet_redesign(ScoresheetEnum.JOURNAL)
             MapScoresheetToTeamJudge.objects.create(teamid=team.id, judgeid=judge.id, scoresheetid=score_sheet.id, sheetType=ScoresheetEnum.JOURNAL)
             created_score_sheets.append(score_sheet)
         if judge.mdo:
-            score_sheet = create_base_score_sheet(ScoresheetEnum.MACHINEDESIGN)
+            score_sheet = create_base_score_sheet_redesign(ScoresheetEnum.MACHINEDESIGN)
             MapScoresheetToTeamJudge.objects.create(teamid=team.id, judgeid=judge.id, scoresheetid=score_sheet.id, sheetType=ScoresheetEnum.MACHINEDESIGN)
             created_score_sheets.append(score_sheet)
         if judge.runpenalties:
-            score_sheet = create_base_score_sheet_runpenalties()
+            score_sheet = create_base_score_sheet_runpenalties_redesign()
             MapScoresheetToTeamJudge.objects.create(teamid=team.id, judgeid=judge.id, scoresheetid=score_sheet.id, sheetType=ScoresheetEnum.RUNPENALTIES)
             created_score_sheets.append(score_sheet)
         if judge.otherpenalties:
-            score_sheet = create_base_score_sheet_otherpenalties()
+            score_sheet = create_base_score_sheet_otherpenalties_redesign()
             MapScoresheetToTeamJudge.objects.create(teamid=team.id, judgeid=judge.id, scoresheetid=score_sheet.id, sheetType=ScoresheetEnum.OTHERPENALTIES)
             created_score_sheets.append(score_sheet)
         if hasattr(judge, 'redesign') and judge.redesign:  # Assuming Judge model has a redesign attribute
@@ -372,37 +372,37 @@ def delete_sheets_for_teams_in_cluster_redesign(judge_id, cluster_id, presentati
         
         for team in teams_in_cluster:
             if presentation:
-                scoresheet_id = get_scoresheet_id(judge_id, team.id, ScoresheetEnum.PRESENTATION)
+                scoresheet_id = get_scoresheet_id_redesign(judge_id, team.id, ScoresheetEnum.PRESENTATION)
                 scoresheet = Scoresheet.objects.get(id=scoresheet_id)
                 mapping = MapScoresheetToTeamJudge.objects.get(judgeid=judge_id, teamid=team.id, sheetType=ScoresheetEnum.PRESENTATION)
                 delete_score_sheet_mapping(mapping.id)
                 scoresheet.delete()
             if journal:
-                scoresheet_id = get_scoresheet_id(judge_id, team.id, ScoresheetEnum.JOURNAL)
+                scoresheet_id = get_scoresheet_id_redesign(judge_id, team.id, ScoresheetEnum.JOURNAL)
                 scoresheet = Scoresheet.objects.get(id=scoresheet_id)
                 mapping = MapScoresheetToTeamJudge.objects.get(judgeid=judge_id, teamid=team.id, sheetType=ScoresheetEnum.JOURNAL)
                 delete_score_sheet_mapping(mapping.id)
                 scoresheet.delete()
             if mdo:
-                scoresheet_id = get_scoresheet_id(judge_id, team.id, ScoresheetEnum.MACHINEDESIGN)
+                scoresheet_id = get_scoresheet_id_redesign(judge_id, team.id, ScoresheetEnum.MACHINEDESIGN)
                 scoresheet = Scoresheet.objects.get(id=scoresheet_id)
                 mapping = MapScoresheetToTeamJudge.objects.get(judgeid=judge_id, teamid=team.id, sheetType=ScoresheetEnum.MACHINEDESIGN)
                 delete_score_sheet_mapping(mapping.id)
                 scoresheet.delete()
             if runpenalties:
-                scoresheet_id = get_scoresheet_id(judge_id, team.id, ScoresheetEnum.RUNPENALTIES)
+                scoresheet_id = get_scoresheet_id_redesign(judge_id, team.id, ScoresheetEnum.RUNPENALTIES)
                 scoresheet = Scoresheet.objects.get(id=scoresheet_id)
                 mapping = MapScoresheetToTeamJudge.objects.get(judgeid=judge_id, teamid=team.id, sheetType=ScoresheetEnum.RUNPENALTIES)
                 delete_score_sheet_mapping(mapping.id)
                 scoresheet.delete()
             if otherpenalties:
-                scoresheet_id = get_scoresheet_id(judge_id, team.id, ScoresheetEnum.OTHERPENALTIES)
+                scoresheet_id = get_scoresheet_id_redesign(judge_id, team.id, ScoresheetEnum.OTHERPENALTIES)
                 scoresheet = Scoresheet.objects.get(id=scoresheet_id)
                 mapping = MapScoresheetToTeamJudge.objects.get(judgeid=judge_id, teamid=team.id, sheetType=ScoresheetEnum.OTHERPENALTIES)
                 delete_score_sheet_mapping(mapping.id)
                 scoresheet.delete()
             if redesign:
-                scoresheet_id = get_scoresheet_id(judge_id, team.id, ScoresheetEnum.REDESIGN)
+                scoresheet_id = get_scoresheet_id_redesign(judge_id, team.id, ScoresheetEnum.REDESIGN)
                 scoresheet = Scoresheet.objects.get(id=scoresheet_id)
                 mapping = MapScoresheetToTeamJudge.objects.get(judgeid=judge_id, teamid=team.id, sheetType=ScoresheetEnum.REDESIGN)
                 delete_score_sheet_mapping(mapping.id)
@@ -416,7 +416,7 @@ def make_sheets_for_team_redesign(teamid, clusterid):
     for judge_map in judges:
         judge = Judge.objects.get(id=judge_map.judgeid)
         if judge.presentation:
-            sheet = create_base_score_sheet(ScoresheetEnum.PRESENTATION)
+            sheet = create_base_score_sheet_redesign(ScoresheetEnum.PRESENTATION)
             map_data = {"teamid": teamid, "judgeid": judge.id, "scoresheetid": sheet.id, "sheetType": ScoresheetEnum.PRESENTATION}
             map_serializer = MapScoreSheetToTeamJudgeSerializer(data=map_data)
             if map_serializer.is_valid():
@@ -425,7 +425,7 @@ def make_sheets_for_team_redesign(teamid, clusterid):
             else:
                 raise ValidationError(map_serializer.errors)
         if judge.journal:
-            sheet = create_base_score_sheet(ScoresheetEnum.JOURNAL)
+            sheet = create_base_score_sheet_redesign(ScoresheetEnum.JOURNAL)
             map_data = {"teamid": teamid, "judgeid": judge.id, "scoresheetid": sheet.id, "sheetType": ScoresheetEnum.JOURNAL}
             map_serializer = MapScoreSheetToTeamJudgeSerializer(data=map_data)
             if map_serializer.is_valid():
@@ -434,7 +434,7 @@ def make_sheets_for_team_redesign(teamid, clusterid):
             else:
                 raise ValidationError(map_serializer.errors)
         if judge.mdo:
-            sheet = create_base_score_sheet(ScoresheetEnum.MACHINEDESIGN)
+            sheet = create_base_score_sheet_redesign(ScoresheetEnum.MACHINEDESIGN)
             map_data = {"teamid": teamid, "judgeid": judge.id, "scoresheetid": sheet.id, "sheetType": ScoresheetEnum.MACHINEDESIGN}
             map_serializer = MapScoreSheetToTeamJudgeSerializer(data=map_data)
             if map_serializer.is_valid():
@@ -443,7 +443,7 @@ def make_sheets_for_team_redesign(teamid, clusterid):
             else:
                 raise ValidationError(map_serializer.errors)
         if judge.runpenalties:
-            sheet = create_base_score_sheet_runpenalties()
+            sheet = create_base_score_sheet_runpenalties_redesign()
             map_data = {"teamid": teamid, "judgeid": judge.id, "scoresheetid": sheet.id, "sheetType": ScoresheetEnum.RUNPENALTIES}
             map_serializer = MapScoreSheetToTeamJudgeSerializer(data=map_data)
             if map_serializer.is_valid():
@@ -452,7 +452,7 @@ def make_sheets_for_team_redesign(teamid, clusterid):
             else:
                 raise ValidationError(map_serializer.errors)
         if judge.otherpenalties:
-            sheet = create_base_score_sheet_otherpenalties()
+            sheet = create_base_score_sheet_otherpenalties_redesign()
             map_data = {"teamid": teamid, "judgeid": judge.id, "scoresheetid": sheet.id, "sheetType": ScoresheetEnum.OTHERPENALTIES}
             map_serializer = MapScoreSheetToTeamJudgeSerializer(data=map_data)
             if map_serializer.is_valid():
