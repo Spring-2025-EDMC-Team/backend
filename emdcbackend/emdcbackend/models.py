@@ -104,7 +104,6 @@ class ScoresheetEnum(models.IntegerChoices):
     MACHINEDESIGN = 3
     RUNPENALTIES = 4
     OTHERPENALTIES = 5
-    REDESIGN = 6
 
 class Scoresheet(models.Model):
     sheetType = models.IntegerField(choices=ScoresheetEnum.choices)
@@ -171,6 +170,29 @@ class Scoresheet(models.Model):
 
     def save(self, *args, **kwargs):
         # Call the clean method before saving to trigger validation
+        self.clean()
+        super().save(*args, **kwargs)
+
+class RedesignScoresheet(models.Model):
+    teamid = models.IntegerField()
+    judgeid = models.IntegerField()
+    isSubmitted = models.BooleanField(default=False)
+    field1 = models.FloatField(null=True, blank=True)
+    field2 = models.FloatField(null=True, blank=True)
+    field3 = models.FloatField(null=True, blank=True)
+    field4 = models.FloatField(null=True, blank=True)
+    field5 = models.FloatField(null=True, blank=True)
+    field6 = models.FloatField(null=True, blank=True)
+    field7 = models.FloatField(null=True, blank=True)
+    field8 = models.CharField(null=True, blank=True, max_length=500)
+
+    def clean(self):
+        required_fields = ['field1', 'field2', 'field3', 'field4', 'field5', 'field6', 'field7']
+        for field in required_fields:
+            if getattr(self, field) is None:
+                raise ValidationError({field: f'{field.capitalize()} is required.'})
+
+    def save(self, *args, **kwargs):
         self.clean()
         super().save(*args, **kwargs)
 

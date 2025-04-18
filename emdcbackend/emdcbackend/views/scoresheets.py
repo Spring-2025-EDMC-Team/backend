@@ -33,27 +33,9 @@ def create_score_sheet(request):
 @authentication_classes([SessionAuthentication, TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def edit_score_sheet(request):
-    scores = get_object_or_404(Scoresheet, id=request.data["id"])
-    scores.sheetType = request.data["sheetType"]
-    scores.isSubmitted = request.data["isSubmitted"]
-    if scores.sheetType == ScoresheetEnum.OTHERPENALTIES:
-        scores.field1 = request.data["field1"]
-        scores.field2 = request.data["field2"]
-        scores.field3 = request.data["field3"]
-        scores.field4 = request.data["field4"]
-        scores.field5 = request.data["field5"]
-        scores.field6 = request.data["field6"]
-        scores.field7 = request.data["field7"]
-    if scores.sheetType == ScoresheetEnum.REDESIGN:
-            scores.field1 = request.data["field1"]
-            scores.field2 = request.data["field2"]
-            scores.field3 = request.data["field3"]
-            scores.field4 = request.data["field4"]
-            scores.field5 = request.data["field5"]
-            scores.field6 = request.data["field6"]
-            scores.field7 = request.data["field7"]
-            scores.field9 = request.data["field8"]
-    else:
+    if request.data["sheetType"] == ScoresheetEnum.REDESIGN:
+        scores = get_object_or_404(RedesignScoresheet, id=request.data["id"])
+        scores.isSubmitted = request.data["isSubmitted"]
         scores.field1 = request.data["field1"]
         scores.field2 = request.data["field2"]
         scores.field3 = request.data["field3"]
@@ -62,43 +44,51 @@ def edit_score_sheet(request):
         scores.field6 = request.data["field6"]
         scores.field7 = request.data["field7"]
         scores.field8 = request.data["field8"]
-        scores.field9 = request.data["field9"]
-        if scores.sheetType == ScoresheetEnum.RUNPENALTIES:
-            scores.field10 = request.data["field10"]
-            scores.field11 = request.data["field11"]
-            scores.field12 = request.data["field12"]
-            scores.field13 = request.data["field13"]
-            scores.field14 = request.data["field14"]
-            scores.field15 = request.data["field15"]
-            scores.field16 = request.data["field16"]
-            scores.field17 = request.data["field17"]
-    scores.save()
-    serializer = ScoresheetSerializer(instance=scores)
-    return Response({"edit_score_sheets": serializer.data})
+        scores.save()
+        serializer = RedesignScoresheetSerializer(instance=scores)
+        return Response({"edit_score_sheets": serializer.data})
+    else:
+        scores = get_object_or_404(Scoresheet, id=request.data["id"])
+        scores.sheetType = request.data["sheetType"]
+        scores.isSubmitted = request.data["isSubmitted"]
+        if scores.sheetType == ScoresheetEnum.OTHERPENALTIES:
+            scores.field1 = request.data["field1"]
+            scores.field2 = request.data["field2"]
+            scores.field3 = request.data["field3"]
+            scores.field4 = request.data["field4"]
+            scores.field5 = request.data["field5"]
+            scores.field6 = request.data["field6"]
+            scores.field7 = request.data["field7"]
+        else:
+            scores.field1 = request.data["field1"]
+            scores.field2 = request.data["field2"]
+            scores.field3 = request.data["field3"]
+            scores.field4 = request.data["field4"]
+            scores.field5 = request.data["field5"]
+            scores.field6 = request.data["field6"]
+            scores.field7 = request.data["field7"]
+            scores.field8 = request.data["field8"]
+            scores.field9 = request.data["field9"]
+            if scores.sheetType == ScoresheetEnum.RUNPENALTIES:
+                scores.field10 = request.data["field10"]
+                scores.field11 = request.data["field11"]
+                scores.field12 = request.data["field12"]
+                scores.field13 = request.data["field13"]
+                scores.field14 = request.data["field14"]
+                scores.field15 = request.data["field15"]
+                scores.field16 = request.data["field16"]
+                scores.field17 = request.data["field17"]
+        scores.save()
+        serializer = ScoresheetSerializer(instance=scores)
+        return Response({"edit_score_sheets": serializer.data})
 
 @api_view(["POST"])
 @authentication_classes([SessionAuthentication, TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def update_scores(request):
-    scores = get_object_or_404(Scoresheet, id=request.data["id"])
-    if scores.sheetType == ScoresheetEnum.OTHERPENALTIES:
-        scores.field1 = request.data["field1"]
-        scores.field2 = request.data["field2"]
-        scores.field3 = request.data["field3"]
-        scores.field4 = request.data["field4"]
-        scores.field5 = request.data["field5"]
-        scores.field6 = request.data["field6"]
-        scores.field7 = request.data["field7"]
-    if scores.sheetType == ScoresheetEnum.REDESIGN:
-            scores.field1 = request.data["field1"]
-            scores.field2 = request.data["field2"]
-            scores.field3 = request.data["field3"]
-            scores.field4 = request.data["field4"]
-            scores.field5 = request.data["field5"]
-            scores.field6 = request.data["field6"]
-            scores.field7 = request.data["field7"]
-            scores.field9 = request.data["field8"]
-    else:
+    if request.data["sheetType"] == ScoresheetEnum.REDESIGN:
+        scores = get_object_or_404(RedesignScoresheet, id=request.data["id"])
+        scores.isSubmitted = request.data["isSubmitted"] if "isSubmitted" in request.data else scores.isSubmitted
         scores.field1 = request.data["field1"]
         scores.field2 = request.data["field2"]
         scores.field3 = request.data["field3"]
@@ -107,20 +97,41 @@ def update_scores(request):
         scores.field6 = request.data["field6"]
         scores.field7 = request.data["field7"]
         scores.field8 = request.data["field8"]
-        scores.field9 = request.data["field9"]
-        if scores.sheetType == ScoresheetEnum.RUNPENALTIES:
-            scores.field10 = request.data["field10"]
-            scores.field11 = request.data["field11"]
-            scores.field12 = request.data["field12"]
-            scores.field13 = request.data["field13"]
-            scores.field14 = request.data["field14"]
-            scores.field15 = request.data["field15"]
-            scores.field16 = request.data["field16"]
-            scores.field17 = request.data["field17"]
-        
-    scores.save()
-    serializer = ScoresheetSerializer(instance=scores)
-    return Response({"updated_sheet": serializer.data})
+        scores.save()
+        serializer = RedesignScoresheetSerializer(instance=scores)
+        return Response({"updated_sheet": serializer.data})
+    else:
+        scores = get_object_or_404(Scoresheet, id=request.data["id"])
+        if scores.sheetType == ScoresheetEnum.OTHERPENALTIES:
+            scores.field1 = request.data["field1"]
+            scores.field2 = request.data["field2"]
+            scores.field3 = request.data["field3"]
+            scores.field4 = request.data["field4"]
+            scores.field5 = request.data["field5"]
+            scores.field6 = request.data["field6"]
+            scores.field7 = request.data["field7"]
+        else:
+            scores.field1 = request.data["field1"]
+            scores.field2 = request.data["field2"]
+            scores.field3 = request.data["field3"]
+            scores.field4 = request.data["field4"]
+            scores.field5 = request.data["field5"]
+            scores.field6 = request.data["field6"]
+            scores.field7 = request.data["field7"]
+            scores.field8 = request.data["field8"]
+            scores.field9 = request.data["field9"]
+            if scores.sheetType == ScoresheetEnum.RUNPENALTIES:
+                scores.field10 = request.data["field10"]
+                scores.field11 = request.data["field11"]
+                scores.field12 = request.data["field12"]
+                scores.field13 = request.data["field13"]
+                scores.field14 = request.data["field14"]
+                scores.field15 = request.data["field15"]
+                scores.field16 = request.data["field16"]
+                scores.field17 = request.data["field17"]
+        scores.save()
+        serializer = ScoresheetSerializer(instance=scores)
+        return Response({"updated_sheet": serializer.data})
 
 @api_view(["POST"])
 @authentication_classes([SessionAuthentication, TokenAuthentication])
@@ -567,7 +578,10 @@ def make_sheets_for_team(teamid, clusterid):
 @permission_classes([IsAuthenticated])
 def get_scoresheet_details_by_team(request, team_id):
     scoresheet_mappings = MapScoresheetToTeamJudge.objects.filter(teamid=team_id)
-    scoresheets = Scoresheet.objects.filter(id__in=scoresheet_mappings.values_list('scoresheetid', flat=True))
+    # Split redesign and other scoresheets
+    redesign_ids = scoresheet_mappings.filter(sheetType=6).values_list('scoresheetid', flat=True)
+    redesign_sheets = RedesignScoresheet.objects.filter(id__in=redesign_ids)
+    scoresheets = Scoresheet.objects.filter(id__in=scoresheet_mappings.exclude(sheetType=6).values_list('scoresheetid', flat=True))
     presentation_scoresheet_details = [[] for _ in range(9)]
     journal_scoresheet_details = [[] for _ in range(9)]
     machinedesign_scoresheet_details = [[] for _ in range(9)]
@@ -704,14 +718,14 @@ def get_scoresheet_details_by_team(request, team_id):
       "7": other_penalties_scoresheet_details[6],
     }
     redesign_scoresheet_response = {
-      "1": other_penalties_scoresheet_details[0],
-      "2": other_penalties_scoresheet_details[1],
-      "3": other_penalties_scoresheet_details[2],
-      "4": other_penalties_scoresheet_details[3],
-      "5": other_penalties_scoresheet_details[4],
-      "6": other_penalties_scoresheet_details[5],
-      "7": other_penalties_scoresheet_details[6],
-      "8": other_penalties_scoresheet_details[7],
+      "1": redesign_scoresheet_details[0],
+      "2": redesign_scoresheet_details[1],
+      "3": redesign_scoresheet_details[2],
+      "4": redesign_scoresheet_details[3],
+      "5": redesign_scoresheet_details[4],
+      "6": redesign_scoresheet_details[5],
+      "7": redesign_scoresheet_details[6],
+      "8": redesign_scoresheet_details[7],
     }
     return Response({
       "1": presentation_scoresheet_response,
@@ -732,7 +746,9 @@ def get_scoresheet_details_for_contest(request):
     for mapping in team_mappings:
         team = get_object_or_404(Teams, id=mapping.teamid)
         scoresheet_mappings = MapScoresheetToTeamJudge.objects.filter(teamid=team.id)
-        scoresheets = Scoresheet.objects.filter(id__in=scoresheet_mappings.values_list('scoresheetid', flat=True))
+        redesign_ids = scoresheet_mappings.filter(sheetType=6).values_list('scoresheetid', flat=True)
+        redesign_sheets = RedesignScoresheet.objects.filter(id__in=redesign_ids)
+        scoresheets = Scoresheet.objects.filter(id__in=scoresheet_mappings.exclude(sheetType=6).values_list('scoresheetid', flat=True))
         presentation_scoresheet_details = [[] for _ in range(9)]
         journal_scoresheet_details = [[] for _ in range(9)]
         machinedesign_scoresheet_details = [[] for _ in range(9)]
@@ -796,15 +812,16 @@ def get_scoresheet_details_for_contest(request):
                 other_penalties_scoresheet_details[4].append(sheet.field5)
                 other_penalties_scoresheet_details[5].append(sheet.field6)
                 other_penalties_scoresheet_details[6].append(sheet.field7)
-            elif sheet.sheetType == 6:
-                redesign_scoresheet_details[0].append(sheet.field1)
-                redesign_scoresheet_details[1].append(sheet.field2)
-                redesign_scoresheet_details[2].append(sheet.field3)
-                redesign_scoresheet_details[3].append(sheet.field4)
-                redesign_scoresheet_details[4].append(sheet.field5)
-                redesign_scoresheet_details[5].append(sheet.field6)
-                redesign_scoresheet_details[6].append(sheet.field7)
-                redesign_scoresheet_details[7].append(sheet.field8)
+            # Redesign scores are now handled by RedesignScoresheet model
+        for sheet in redesign_sheets:
+            redesign_scoresheet_details[0].append(sheet.field1)
+            redesign_scoresheet_details[1].append(sheet.field2)
+            redesign_scoresheet_details[2].append(sheet.field3)
+            redesign_scoresheet_details[3].append(sheet.field4)
+            redesign_scoresheet_details[4].append(sheet.field5)
+            redesign_scoresheet_details[5].append(sheet.field6)
+            redesign_scoresheet_details[6].append(sheet.field7)
+            redesign_scoresheet_details[7].append(sheet.field8)
 
 
         presentation_scoresheet_response = {
@@ -868,14 +885,14 @@ def get_scoresheet_details_for_contest(request):
           "7": other_penalties_scoresheet_details[6],
         }
         redesign_scoresheet_response = {
-            "1": other_penalties_scoresheet_details[0],
-            "2": other_penalties_scoresheet_details[1],
-            "3": other_penalties_scoresheet_details[2],
-            "4": other_penalties_scoresheet_details[3],
-            "5": other_penalties_scoresheet_details[4],
-            "6": other_penalties_scoresheet_details[5],
-            "7": other_penalties_scoresheet_details[6],
-            "8": other_penalties_scoresheet_details[7],
+            "1": redesign_scoresheet_details[0],
+            "2": redesign_scoresheet_details[1],
+            "3": redesign_scoresheet_details[2],
+            "4": redesign_scoresheet_details[3],
+            "5": redesign_scoresheet_details[4],
+            "6": redesign_scoresheet_details[5],
+            "7": redesign_scoresheet_details[6],
+            "8": redesign_scoresheet_details[7],
         }
 
         team_responses[team.id] = {
