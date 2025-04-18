@@ -88,3 +88,17 @@ def get_all_awards(request):
 
     except Exception as e:
         return Response({"detail": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+# Get request to get get all awards based on isJudge boolean
+# used in frontend pages for organizers and judge only show their respective awards
+@api_view(["GET"])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def get_awards_by_role(request, isJudge):
+    try:
+        is_judge = isJudge.lower() == 'true'
+        awards = SpecialAward.objects.filter(isJudge=is_judge)
+        serializer = SpecialAwardSerializer(awards, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    except Exception as e:
+        return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

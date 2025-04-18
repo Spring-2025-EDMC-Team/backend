@@ -249,6 +249,7 @@ def make_team(data):
         "presentation_score":data["presentation_score"],
         "machinedesign_score":data["machinedesign_score"],
         "penalties_score":data["penalties_score"],
+        "redesign_score":data["redesign_score"],
         "total_score":data["total_score"]
     }
     team_response = make_team_instance(team_data)

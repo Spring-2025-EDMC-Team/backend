@@ -42,6 +42,7 @@ class Judge(models.Model):
     journal=models.BooleanField()
     runpenalties=models.BooleanField()
     otherpenalties=models.BooleanField()
+    redesign=models.BooleanField()
     role = models.IntegerField(choices=JudgeRoleEnum.choices, null=True, blank=True)
 
 class MapJudgeToCluster(models.Model):
@@ -61,6 +62,7 @@ class Teams(models.Model):
     presentation_score = models.FloatField()
     machinedesign_score = models.FloatField()
     penalties_score = models.FloatField()
+    redesign_score = models.FloatField()
     total_score = models.FloatField()
     team_rank = models.IntegerField(null=True,blank=True)
     cluster_rank = models.IntegerField(null=True,blank=True)
@@ -102,6 +104,7 @@ class ScoresheetEnum(models.IntegerChoices):
     MACHINEDESIGN = 3
     RUNPENALTIES = 4
     OTHERPENALTIES = 5
+    REDESIGN = 6
 
 class Scoresheet(models.Model):
     sheetType = models.IntegerField(choices=ScoresheetEnum.choices)
@@ -154,7 +157,7 @@ class Scoresheet(models.Model):
 
             if errors:
                 raise ValidationError(errors)
-        elif self.sheetType == ScoresheetEnum.OTHERPENALTIES:
+        elif self.sheetType == ScoresheetEnum.OTHERPENALTIES or ScoresheetEnum.REDESIGN:
             required_fields = ['field1', 'field2', 'field3', 'field4', 'field5', 'field6', 'field7']
             for field in required_fields:
                 if getattr(self, field) is None:
