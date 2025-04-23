@@ -1,5 +1,7 @@
 from django.urls import path
 from .auth import views
+from .auth.password_validation import validate_password_strength
+from .auth.email_verification import send_verification_email, verify_email, check_email
 from .views.Maps.MapClusterToContest import all_clusters_by_contest_id
 from .views.Maps.MapClusterToTeam import create_cluster_team_mapping, delete_cluster_team_mapping_by_id, \
     teams_by_cluster_id, cluster_by_team_id, get_teams_by_cluster_rank
@@ -43,6 +45,10 @@ urlpatterns = [
     path('api/login/', views.login, name='login'),
     path('api/signup/', views.signup, name='signup'),
     path('api/testToken/', views.test_token, name='test_token'),
+    path('api/validate-password/', validate_password_strength, name='validate_password'),
+    path('api/send-verification-email/', send_verification_email, name='send_verification_email'),
+    path('api/verify-email/', verify_email, name='verify_email'),
+    path('api/check-email/', check_email, name='check_email'),
 
     # Users
     path('api/user/get/<int:user_id>/', views.user_by_id, name='user_by_id'),
