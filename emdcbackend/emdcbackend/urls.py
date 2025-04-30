@@ -26,6 +26,7 @@ from .views.Maps.MapClusterToJudge import create_cluster_judge_mapping, delete_c
 from .views.tabulation import tabulate_scores
 from .views.email_verification import EmailVerificationView
 from .views.password_validation import validate_password
+from .views.scoresheets_redesign import *
 
 urlpatterns = [
     # Admins
@@ -157,6 +158,16 @@ urlpatterns = [
     path('api/scoreSheet/edit/updateScores/', update_scores, name='update_scores'),
     path('api/scoreSheet/getDetails/<int:team_id>/', get_scoresheet_details_by_team, name='get_score_sheets_by_team_id'),
     path('api/scoreSheet/getMasterDetails/', get_scoresheet_details_for_contest, name='get_scoresheet_details_for_contest'),
+
+     # ScoreSheets_redesign
+    path('api/scoreSheet_redesign/get/<int:scores_id>/', scores_by_id_redesign, name='scores_by_id_redesign'),
+    path('api/scoreSheet_redesign/create/', create_score_sheet_redesign, name='create_score_sheets_redesign'),
+    path('api/scoreSheet_redesign/edit/', edit_score_sheet_redesign, name='edit_score_sheets_redesign'),
+    path('api/scoreSheet_redesign/delete/<int:scores_id>/', delete_score_sheet_redesign, name='delete_score_sheets_redesign'),
+    path('api/scoreSheet_redesign/edit/editField/', edit_score_sheet_field_redesign, name='edit_score_sheet_field_redesign'),
+    path('api/scoreSheet_redesign/edit/updateScores/', update_scores_redesign, name='update_scores_redesign'),
+    path('api/scoreSheet_redesign/getDetails/<int:team_id>/', get_scoresheet_details_by_team_redesign, name='get_score_sheets_by_team_id_redesign'),
+    path('api/scoreSheet_redesign/getMasterDetails/', get_scoresheet_details_for_contest_redesign, name='get_scoresheet_details_for_contest_redesign'),
 
     # Tabulation
     path('api/tabulation/tabulateScores/',tabulate_scores, name='tabulate_scores')

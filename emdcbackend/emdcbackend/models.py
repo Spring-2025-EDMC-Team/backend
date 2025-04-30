@@ -44,6 +44,31 @@ class Judge(models.Model):
     otherpenalties=models.BooleanField()
     role = models.IntegerField(choices=JudgeRoleEnum.choices, null=True, blank=True)
 
+
+class RedesignScore(models.Model):
+    DIVISION_CHOICES = [
+        ('junior', 'Junior'),
+        ('senior', 'Senior'),
+    ]
+
+    team_name = models.CharField(max_length=100)
+    division = models.CharField(max_length=6, choices=DIVISION_CHOICES)
+    judge_id = models.CharField(max_length=50)
+    innovation = models.IntegerField(default=0)
+    use_of_item = models.IntegerField(default=0)
+    explanation = models.IntegerField(default=0)
+    principles = models.IntegerField(default=0)
+    learning = models.IntegerField(default=0)
+    teamwork = models.IntegerField(default=0)
+    communication = models.IntegerField(default=0)
+
+    def __str__(self):
+        return f"{self.team_name} - {self.division}"
+
+    class Meta:
+        unique_together = ('team_name', 'division', 'judge_id')
+        
+    team_name = models
 class MapJudgeToCluster(models.Model):
     judgeid = models.IntegerField()
     clusterid = models.IntegerField()
@@ -124,6 +149,13 @@ class Scoresheet(models.Model):
     field16 = models.FloatField(null=True, blank=True)
     field17 = models.FloatField(null=True, blank=True)
     
+class ScoresheetEnum:
+    PRESENTATION = 1
+    JOURNAL = 2
+    MACHINEDESIGN = 3
+    RUNPENALTIES = 4
+    OTHERPENALTIES = 5
+    REDESIGN = 6
     
     
     def clean(self):
@@ -176,6 +208,8 @@ class MapScoresheetToTeamJudge(models.Model):
     judgeid = models.IntegerField()
     scoresheetid = models.IntegerField()
     sheetType = models.IntegerField(choices=ScoresheetEnum.choices)
+
+
 
 
     
