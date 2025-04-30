@@ -353,7 +353,21 @@ def create_sheets_for_teams_in_cluster(judge_id, cluster_id, presentation, journ
                         "judge_id": judge_id,
                         "scoresheet_id": sheet.id,
                         "sheetType": 3
+            
                     })
+            if championship:
+                sheet = create_base_score_sheet(7)
+                map_data = {"teamid": team.id, "judgeid": judge_id, "scoresheetid": sheet.id, "sheetType": 7}
+                map_serializer = MapScoreSheetToTeamJudgeSerializer(data=map_data)
+                if map_serializer.is_valid():
+                    map_serializer.save()
+                    created_score_sheets.append({
+                        "team_id": team.id,
+                        "judge_id": judge_id,
+                        "scoresheet_id": sheet.id,
+                        "sheetType": 7
+                    })
+
                 else:
                     raise ValidationError(map_serializer.errors)
 
@@ -400,6 +414,11 @@ def create_score_sheets_for_team(team, judges):
             score_sheet = create_base_score_sheet_Redesign()
             MapScoresheetToTeamJudge.objects.create(
                 teamid=team.id, judgeid=judge.id, scoresheetid=score_sheet.id, sheetType=ScoresheetEnum.REDESIGN
+            )
+        if judge.championship:
+            score_sheet = create_base_score_sheet_championship()
+            MapScoresheetToTeamJudge.objects.create(
+                teamid=team.id, judgeid=judge.id, scoresheetid=score_sheet.id, sheetType=ScoresheetEnum.CHAMPIONSHIP
             )
             created_score_sheets.append(score_sheet)
     return created_score_sheets
@@ -515,6 +534,19 @@ def make_sheets_for_team(teamid, clusterid):
                     "judge_id": judge.id,
                     "scoresheet_id": sheet.get('id'),
                     "sheetType": 3
+                })
+
+        if judge.championship:
+            sheet = create_base_score_sheet(7)
+            map_data = {"teamid": teamid, "judgeid": judge.id, "scoresheetid": sheet.get('id'), "sheetType": 7}
+            map_serializer = MapScoreSheetToTeamJudgeSerializer(data=map_data)
+            if map_serializer.is_valid():
+                map_serializer.save()
+                created_score_sheets.append({
+                    "team_id": teamid,
+                    "judge_id": judge.id,
+                    "scoresheet_id": sheet.get('id'),
+                    "sheetType": 7
                 })
             else:
                 raise ValidationError(map_serializer.errors)
@@ -676,6 +708,18 @@ def get_scoresheet_details_by_team(request, team_id):
       "9": machinedesign_scoresheet_details[8],
     }
 
+    championship_scoresheet_response = {
+      "1": championship_scoresheet_details[0],
+      "2": championship_scoresheet_details[1],
+      "3": championship_scoresheet_details[2],
+      "4": championship_scoresheet_details[3],
+      "5": championship_scoresheet_details[4],
+      "6": championship_scoresheet_details[5],
+      "7": championship_scoresheet_details[6],
+      "8": championship_scoresheet_details[7],
+      "9": championship_scoresheet_details[8],
+    }
+
     runpenalties_scoresheet_response = {
       "1": run_penalties_scoresheet_details[0],
       "2": run_penalties_scoresheet_details[1],
@@ -805,6 +849,16 @@ def get_scoresheet_details_for_contest(request):
                 redesign_scoresheet_details[5].append(sheet.field6)
                 redesign_scoresheet_details[6].append(sheet.field7)
                 redesign_scoresheet_details[7].append(sheet.field8)
+            elif sheet.sheetType == 7:
+                championship_scoresheet_details[0].append(sheet.field1)
+                championship_scoresheet_details[1].append(sheet.field2)
+                championship_scoresheet_details[2].append(sheet.field3)
+                championship_scoresheet_details[3].append(sheet.field4)
+                championship_scoresheet_details[4].append(sheet.field5)
+                championship_scoresheet_details[5].append(sheet.field6)
+                championship_scoresheet_details[6].append(sheet.field7)
+                championship_scoresheet_details[7].append(sheet.field8)
+                championship_scoresheet_details[8].append(sheet.field9)
 
 
         presentation_scoresheet_response = {
@@ -840,6 +894,7 @@ def get_scoresheet_details_for_contest(request):
           "8": machinedesign_scoresheet_details[7],
           "9": machinedesign_scoresheet_details[8],
         }
+
         runpenalties_scoresheet_response = {
           "1": run_penalties_scoresheet_details[0],
           "2": run_penalties_scoresheet_details[1],
@@ -876,6 +931,19 @@ def get_scoresheet_details_for_contest(request):
             "6": other_penalties_scoresheet_details[5],
             "7": other_penalties_scoresheet_details[6],
             "8": other_penalties_scoresheet_details[7],
+
+        }
+        championship_scoresheet_response = {
+            "1":championship_scoresheet_response[0],
+            "2": championship_scoresheet_response[1],
+            "3": championship_scoresheet_response[2],
+            "4": championship_scoresheet_response[3],
+            "5": championship_scoresheet_response[4],
+            "6": championship_scoresheet_response[5],
+            "7": championship_scoresheet_response[6],
+            "8": championship_scoresheet_response[7],
+            "9": championship_scoresheet_response[8],
+
         }
 
         team_responses[team.id] = {
@@ -885,7 +953,8 @@ def get_scoresheet_details_for_contest(request):
             "3": machinedesign_scoresheet_response,
             "4": runpenalties_scoresheet_response,
             "5": otherpenalties_scoresheet_response,
-            "6": redesign_scoresheet_response
+            "6": redesign_scoresheet_response,
+            "7": championship_scoresheet_response
         }
 
     return Response({"teams": team_responses}, status=status.HTTP_200_OK)
