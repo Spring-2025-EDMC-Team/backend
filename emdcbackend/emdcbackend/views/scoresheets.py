@@ -244,7 +244,7 @@ def create_base_score_sheet_Redesign():
         "field5": 0.0,
         "field6": 0.0,
         "field7": 0.0,
-        "field8": ""
+        "field9": ""
     }
 
     serializer = ScoresheetSerializer(data=base_score_data)
@@ -639,7 +639,7 @@ def get_scoresheet_details_by_team(request, team_id):
         redesign_scoresheet_details[4].append(sheet.field5)
         redesign_scoresheet_details[5].append(sheet.field6)
         redesign_scoresheet_details[6].append(sheet.field7)
-        redesign_scoresheet_details[7].append(sheet.field8)
+        redesign_scoresheet_details[7].append(sheet.field9)
 
 
     presentation_scoresheet_response = {
@@ -804,7 +804,7 @@ def get_scoresheet_details_for_contest(request):
                 redesign_scoresheet_details[4].append(sheet.field5)
                 redesign_scoresheet_details[5].append(sheet.field6)
                 redesign_scoresheet_details[6].append(sheet.field7)
-                redesign_scoresheet_details[7].append(sheet.field8)
+                redesign_scoresheet_details[7].append(sheet.field9)
 
 
         presentation_scoresheet_response = {
