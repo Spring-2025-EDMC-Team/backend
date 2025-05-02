@@ -43,6 +43,7 @@ class Judge(models.Model):
     runpenalties=models.BooleanField()
     otherpenalties=models.BooleanField()
     redesign=models.BooleanField()
+    championship=models.BooleanField()
     role = models.IntegerField(choices=JudgeRoleEnum.choices, null=True, blank=True)
 
 class MapJudgeToCluster(models.Model):
@@ -64,6 +65,7 @@ class Teams(models.Model):
     penalties_score = models.FloatField()
     redesign_score = models.FloatField()
     total_score = models.FloatField()
+    championship_score = models.FloatField()
     team_rank = models.IntegerField(null=True,blank=True)
     cluster_rank = models.IntegerField(null=True,blank=True)
     judge_disqualified = models.BooleanField(default=False)

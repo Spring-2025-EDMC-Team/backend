@@ -250,6 +250,7 @@ def make_team(data):
         "machinedesign_score":data["machinedesign_score"],
         "penalties_score":data["penalties_score"],
         "redesign_score":data["redesign_score"],
+        "championship_score":data["championship_score"],
         "total_score":data["total_score"]
     }
     team_response = make_team_instance(team_data)
