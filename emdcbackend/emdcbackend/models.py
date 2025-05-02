@@ -105,6 +105,7 @@ class ScoresheetEnum(models.IntegerChoices):
     RUNPENALTIES = 4
     OTHERPENALTIES = 5
     REDESIGN = 6
+    CHAMPIONSHIP = 7
 
 class Scoresheet(models.Model):
     sheetType = models.IntegerField(choices=ScoresheetEnum.choices)
